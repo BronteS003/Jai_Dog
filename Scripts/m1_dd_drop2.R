@@ -1,0 +1,272 @@
+################################################################################
+##          MODEL 1: DOG DENSITY (WITH DAY 2 DATA DROPPED)                    ##
+################################################################################
+# Model 1 examining the effect of sterilization effort and other predictors    #
+# on number of dogs observed per transect. Using poisson GLMM. Day 2 data      #
+# removed for comparison to model 1 including all data.                        #
+################################################################################
+##Created by Bronte Slote, last edited June 26, 2026                          ##
+################################################################################
+
+##LOAD LIBRARIES##
+library(readr) #reading csv files
+library(dplyr) #organizing and manipulating data
+library(lubridate) #formatting dates and times
+library(stringr) #manipulating text
+library(tidyr)
+library(ggeffects)
+library(lme4)
+library(RVAideMemoire)
+library(car)
+library(DHARMa)
+library(ggplot2)
+library(patchwork)
+
+################################################################################
+
+##LOAD DATA##
+
+#Create summary data frame dropping all day 2
+#import dog density .rds
+dog_density <- readRDS("Data/dog_density.rds", refhook = NULL)
+#remove all day 2
+density_no_re <- dog_density %>%
+  filter(day == 1)
+
+
+################################################################################
+##SINCE INTERVENTION##
+################################################################################
+
+#Most complex model - since intervention
+m1_since <- glmer(Sighting.Count ~ since_intervention + subdistrict + Mode.Transport +
+                    (1 | polygon) +
+                    offset(log(Track.Length)), 
+                  family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+summary(m1_since)
+#check VIF
+vif(m1_since) #all good
+#drop 1
+drop1(m1_since, test = "Chisq") #drop mode.transport
+
+#Updated model 1 since
+m1.1_since <- glmer(Sighting.Count ~ since_intervention + subdistrict + 
+                      (1 | polygon/survey) +
+                      offset(log(Track.Length)), 
+                    family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+#drop 1 test
+drop1(m1.1_since, test = "Chisq") #all significant, keep all
+
+################################################################################
+
+#Check model fit
+
+#Check residual deviance relative to degrees of freedom
+overdisp.glmer(m1.1_since)
+
+#Check with DHARMa
+simulationOutput_m1_since <- simulateResiduals(fittedModel = m1.1_since) #create simulated data
+
+testDispersion(simulationOutput_m1_since)
+
+testOutliers(simulationOutput_m1_since)
+
+testZeroInflation(simulationOutput_m1_since)
+
+testUniformity(simulationOutput_m1_since)
+
+plot(simulationOutput_m1_since)
+
+
+################################################################################
+##TOTAL EFFORT##
+################################################################################
+
+#most complex
+m1_total <- glmer(Sighting.Count ~ effort_humanpop + subdistrict + Mode.Transport +
+                    (1 | polygon) +
+                    offset(log(Track.Length)), 
+                  family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+summary(m1_total)
+#check VIF
+vif(m1_total) #all good
+#check drop 1
+drop1(m1_total, test = "Chisq") #drop mode.transport
+
+#Updated model 1 total
+m1.1_total <- glmer(Sighting.Count ~ effort_humanpop + subdistrict +
+                      (1 | polygon/survey) +
+                      offset(log(Track.Length)), 
+                    family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+#check drop 1
+drop1(m1.1_total, test = "Chisq") #all significant
+
+################################################################################
+
+#Check model fit
+
+#Check residual deviance relative to degrees of freedom
+overdisp.glmer(m1.1_total)
+
+#Check with DHARMa
+simulationOutput_m1_total <- simulateResiduals(fittedModel = m1.1_total) #create simulated data
+
+testDispersion(simulationOutput_m1_total)
+
+testOutliers(simulationOutput_m1_total)
+
+testZeroInflation(simulationOutput_m1_total)
+
+testUniformity(simulationOutput_m1_total)
+
+plot(simulationOutput_m1_total)
+
+################################################################################
+##ANNUAL EFFORT##
+################################################################################
+
+#most complex model
+m1_year <- glmer(Sighting.Count ~ effort_4y_humanpop + effort_3y_humanpop + effort_2y_humanpop + effort_1y_humanpop + subdistrict + Mode.Transport +
+                   (1 | polygon) +
+                   offset(log(Track.Length)), 
+                 family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+summary(m1_year)
+#check VIF
+vif(m1_year) #all good
+#check drop 1
+drop1(m1_year, test = "Chisq") #drop effort 2y
+
+#updated model
+m1.1_year <- glmer(Sighting.Count ~ effort_4y_humanpop + effort_3y_humanpop + effort_1y_humanpop + subdistrict + Mode.Transport +
+                     (1 | polygon) +
+                     offset(log(Track.Length)), 
+                   family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+#check drop 1
+drop1(m1.1_year, test = "Chisq") #drop effort 1y
+
+#updated model
+m1.2_year <- glmer(Sighting.Count ~ effort_4y_humanpop + effort_3y_humanpop + subdistrict + Mode.Transport +
+                     (1 | polygon) +
+                     offset(log(Track.Length)), 
+                   family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+#check drop 1
+drop1(m1.2_year, test = "Chisq") #drop mode.transport
+
+#updated model
+m1.3_year <- glmer(Sighting.Count ~ effort_4y_humanpop + effort_3y_humanpop + subdistrict +
+                     (1 | polygon/survey) +
+                     offset(log(Track.Length)), 
+                   family = poisson, data = density_no_re,control=glmerControl(optimizer="bobyqa"))
+
+#check drop 1
+drop1(m1.3_year, test = "Chisq") #all significant
+
+################################################################################
+
+#Check model fit
+
+#Check residual deviance relative to degrees of freedom
+overdisp.glmer(m1.3_year)
+
+#Check with DHARMa
+simulationOutput_m1_year <- simulateResiduals(fittedModel = m1.3_year) #create simulated data
+
+testDispersion(simulationOutput_m1_year)
+
+testOutliers(simulationOutput_m1_year)
+
+testZeroInflation(simulationOutput_m1_year)
+
+testUniformity(simulationOutput_m1_year)
+
+plot(simulationOutput_m1_year)
+
+################################################################################
+
+##COMPARE MODEL FIT##
+AIC(m1.1_since, m1.1_total, m1.3_year)#since intervention model has lowest AIC
+
+################################################################################
+
+#PLOT#
+
+#Since Intervention - Dog Density
+# Get predicted values over time since intervention
+preds1_since <- ggpredict(m1.1_since,
+                          terms = c("since_intervention", "subdistrict"),
+                          condition = c(Track.Length = 1),
+                          type = "random")
+#Get raw avg. points
+raw_avg <- density_no_re %>%
+  group_by(survey) %>%
+  summarise(
+    mean_density = mean(Dogs.per.km, na.rm = TRUE),
+    since_intervention = first(since_intervention),   # keep variables for plotting
+    subdistrict = first(subdistrict),
+    .groups = "drop"
+  )
+
+day2_since <- plot(preds1_since) +
+  geom_point(
+    data = raw_avg,
+    aes(x = since_intervention, y = mean_density, color = subdistrict),
+    alpha = 0.5,
+    size = 2,
+    inherit.aes = FALSE
+  ) +
+  labs(title = NULL,
+       x = "Time Since Intervention (Years)",
+       y = "Predicted Sightings per Km") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "right",
+    axis.text = element_text(color = "gray30"),
+    panel.grid.minor = element_blank()
+  ) +
+  coord_cartesian(ylim = c(0, 22))
+
+# Get predicted values over total effort
+preds1_effort <- ggpredict(m1.1_total,
+                           terms = c("effort_humanpop", "subdistrict"),
+                           condition = c(Track.Length = 1),
+                           type = "random")
+#Get raw avg. points
+raw_avg <- density_no_re %>%
+  group_by(survey) %>%
+  summarise(
+    mean_density = mean(Dogs.per.km, na.rm = TRUE),
+    effort_humanpop = first(effort_humanpop),   # keep variables for plotting
+    subdistrict = first(subdistrict),
+    .groups = "drop"
+  )
+
+day2_effort <- plot(preds1_effort) +
+  geom_point(
+    data = raw_avg,
+    aes(x = effort_humanpop, y = mean_density, color = subdistrict),
+    alpha = 0.5,
+    size = 2,
+    inherit.aes = FALSE
+  ) +
+  labs(title = NULL,
+       x = "Total Sterilization Effort (per Human Capita)",
+       y = "Predicted Sightings per Km") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "right",
+    axis.text = element_text(color = "gray30"),
+    panel.grid.minor = element_blank()
+  ) +
+  coord_cartesian(ylim = c(0, 22))
+
+day2_dd <- day2_since + day2_effort +
+  plot_annotation(tag_levels = "A")
+
+################################################################################
+
+#save plot
+ggsave("Plots/m1_dd_drop2.png", plot = day2_dd, width = 12, height = 6, dpi = 300)
+
+
