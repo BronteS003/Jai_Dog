@@ -124,7 +124,7 @@ testZeroInflation(simulationOutput_m1_effort)
 
 testUniformity(simulationOutput_m1_effort)
 
-plot(simulationOutput_m1_effort) #is there a problem with quantile deviation?
+plot(simulationOutput_m1_effort)
 
 ################################################################################
 
@@ -198,7 +198,7 @@ testZeroInflation(simulationOutput_m1_year)
 
 testUniformity(simulationOutput_m1_year)
 
-plot(simulationOutput_m1_year) #is there a problem with quantile deviation?
+plot(simulationOutput_m1_year)
 
 ################################################################################
 

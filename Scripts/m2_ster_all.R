@@ -140,7 +140,7 @@ testZeroInflation(simulationOutput_m2_total)
 
 testUniformity(simulationOutput_m2_total)
 
-plot(simulationOutput_m2_total) #problem with quantile deviation?
+plot(simulationOutput_m2_total)
 
 ################################################################################
 
