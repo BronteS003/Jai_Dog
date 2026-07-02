@@ -267,6 +267,6 @@ day2_dd <- day2_since + day2_effort +
 ################################################################################
 
 #save plot
-ggsave("Plots/m1_dd_drop2.png", plot = day2_dd, width = 12, height = 6, dpi = 300)
+ggsave("Plots/m1_dd_drop2.jpg", plot = day2_dd, width = 12, height = 6, dpi = 300)
 
 

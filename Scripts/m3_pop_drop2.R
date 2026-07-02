@@ -144,4 +144,4 @@ day2_puppy <- puppy_since + puppy_annual +
 ################################################################################
 
 #save plot
-ggsave("Plots/m3_pup_drop2.png", plot = day2_puppy, width = 12, height = 6, dpi = 300)
+ggsave("Plots/m3_pup_drop2.jpg", plot = day2_puppy, width = 12, height = 6, dpi = 300)

@@ -276,6 +276,6 @@ plot_year <-p1/p2/p3 +
 ################################################################################
 
 #save plot
-ggsave("Plots/m2_ster_all.png", plot = plot_year, width = 8, height = 6, dpi = 300)
+ggsave("Plots/m2_ster_all.jpg", plot = plot_year, width = 8, height = 6, dpi = 300)
 
 

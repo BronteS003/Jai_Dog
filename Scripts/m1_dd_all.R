@@ -290,4 +290,4 @@ m1_plot <- since+effort +
   plot_annotation(tag_levels = "A")
 
 #save plot
-ggsave("Plots/m1_dd_all.png", plot = m1_plot, width = 12, height = 6, dpi = 300)
+ggsave("Plots/m1_dd_all.jpg", plot = m1_plot, width = 12, height = 6, dpi = 300)

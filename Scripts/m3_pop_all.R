@@ -310,6 +310,6 @@ puppy_plot<- puppy_since + year_puppy +
   plot_annotation(tag_levels = "A")
 
 #save plot
-ggsave("Plots/m3_pup_all.png", plot = puppy_plot, width = 8, height = 6, dpi = 300)
+ggsave("Plots/m3_pup_all.jpg", plot = puppy_plot, width = 8, height = 6, dpi = 300)
 
 ################################################################################
