@@ -273,6 +273,57 @@ AIC(m3.2.1_since, m3.2.2_effort, m3.2.3_year) #since intervention has lowest
 
 ################################################################################
 
+
+##TEST STABILITY OF SINCE INTERVENTION MODEL##
+##Leave one puppy out
+
+puppies <- which(sightings$Puppy == 1)
+
+loo_results <- lapply(puppies, function(i) {
+  
+  m <- glm(
+    Puppy ~ since_intervention + subdistrict,
+    family = binomial,
+    data = sightings[-i, ]
+  )
+  
+  c(
+    estimate = coef(m)["since_intervention"],
+    OR = exp(coef(m)["since_intervention"])
+  )
+})
+
+loo_results <- do.call(rbind, loo_results)
+
+loo_results
+
+#range of estimates
+range(loo_results[, "OR.since_intervention"], na.rm = TRUE) #0.4317112-0.4981971
+
+exp(coef(m3.2.1_since)["since_intervention"]) #0.4739527
+
+################################################################################
+
+#Firth logistic regression
+
+install.packages("logistf")
+library(logistf)
+
+m3.2.1_firth <- logistf(
+  Puppy ~ since_intervention + subdistrict,
+  data = sightings
+)
+
+summary(m3.2.1_firth)
+
+#compare two models
+exp(coef(m3.2.1_since)["since_intervention"]) #0.4739527
+
+exp(coef(m3.2.1_firth)["since_intervention"]) #0.4982133
+
+
+################################################################################
+
 ##PLOT MODELS##
 
 #Plot since intervention model
