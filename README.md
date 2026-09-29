@@ -2,7 +2,7 @@
 Analysis of Jai Dog's transect data.
 
 
-This repo contains all data and scripts for the manuscript titled "The Impacts of Dog Sterilization Campaigns in Thailand: Understanding Changes in Dog Population Dynamics and Welfare". 
+This repo contains all data and scripts for the manuscript titled "The Impacts of Dog Sterilization Campaigns in Thailand: Understanding Changes in Dog Population Dynamics". 
 
 # Data
 Contains all .csv and .rds files used throughout the analysis.
