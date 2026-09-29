@@ -1,0 +1,33 @@
+# Survey and research data
+data/
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.xlsm
+*.sav
+*.dta
+*.parquet
+
+# Generated results
+outputs/
+figures_output/
+*.html
+
+# Python and Jupyter
+.venv/
+venv/
+.local_python_packages/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local configuration and temporary files
+.env
+.env.*
+.vscode/
+*.code-workspace
+*.log
+tmp/
+manuscript_kap_targeted_revision.md
+
