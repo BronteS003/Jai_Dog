@@ -1,5 +1,5 @@
 # Jai_Dog
-Analysis of Jai Dog's transect data.
+Analysis of Jai Dog's transect and KAP survey data.
 
 
 This repo contains all data and scripts for the manuscript titled "The Impacts of Dog Sterilization Campaigns in Thailand: Understanding Changes in Dog Population Dynamics". 
@@ -43,4 +43,5 @@ m4_health_all.R - Model 4 Health status, with all days of data included.
 
 sightings_RDS.R - Script cleaning FULL_sightings.csv, and saving as RDS file. 
 
-
+# JaiDogRescue_KAP_Analysis
+All code from KAP survey analysis.
